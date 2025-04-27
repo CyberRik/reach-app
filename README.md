@@ -1,6 +1,8 @@
 # REACH.APP
 NOTE: Work on your own branches and commit to main if working
-Two Folders-
+
+Make a folder structure-
 1. Web version(MERN stack)
 2. Web version(No code)
 3. App version
+3. App version(no code)
