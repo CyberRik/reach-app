@@ -1,5 +1,4 @@
 # REACH.APP
-The beginning to a bright future.
 NOTE: Make your own branches and commit to main if working
 Two Folders-
 1. Web version(MERN stack)
