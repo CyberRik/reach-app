@@ -11,7 +11,7 @@ function Marker({ place, category }) {
       height: 30,
     },
     "Fire-Equipment": { src: "/Fire-Equipment.png", width: 30, height: 30 },
-    Crime: { src: "/Crime.png", width: 48, height: 69 },
+    Crime: { src: "/Crime.png", width: 30, height: 60 },
     Hospitals: { src: "/Hospitals.png", width: 30, height: 30 },
   };
 
@@ -21,8 +21,8 @@ function Marker({ place, category }) {
       icon={{
         url: Schema[category].src,
         scaledSize: new window.google.maps.Size(
-          Schema[category].height,
-          Schema[category].width
+          Schema[category].width,
+          Schema[category].height
         ),
       }}
     />
