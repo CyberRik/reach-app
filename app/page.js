@@ -13,7 +13,7 @@ export default function Home() {
   const getPlaces=(cate)=>{
     GlobalApi.getGooglePlaces(cate,rad).then((res)=>{
       console.log(res.data.product.results)
-      setcategoryResults((cat) => [...cat, [cate, res.data.product.results]]);
+      setcategoryResults((cat) => [...cat, [cat, res.data.product.results]]);
     })
   }
   useEffect(()=>{

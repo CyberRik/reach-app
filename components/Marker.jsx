@@ -1,10 +1,12 @@
-import React from "react";
+import React, { useState } from "react";
 import { MarkerF } from "@react-google-maps/api";
+import EventInfo from "./EventNavigation/EventInfo";
 
 function Marker({ place, category }) {
-  const Schema = {
-    Medical: { src: "/Medical.png", width: 48, height: 69 },
-    Fire: { src: "/Fire.png", width: 48, height: 69 },
+  const [click, setclick] = useState(false);
+  const Icon = {
+    Medical: { src: "/Medical.png", width: 30, height: 60 },
+    Fire: { src: "/Fire.png", width: 30, height: 60 },
     "Medical-Equipment": {
       src: "/Medical-Equipment.png",
       width: 30,
@@ -19,13 +21,16 @@ function Marker({ place, category }) {
     <MarkerF
       position={place.geometry.location}
       icon={{
-        url: Schema[category].src,
+        url: Icon[category].src,
         scaledSize: new window.google.maps.Size(
-          Schema[category].width,
-          Schema[category].height
+          Icon[category].width,
+          Icon[category].height
         ),
       }}
-    />
+      onClick={() => setclick(!click)}
+    >
+      {/* <EventInfo event={corresponding_event} /> */}
+    </MarkerF>
   );
 }
 
