@@ -1,11 +1,12 @@
 import React, { useState } from "react";
-import { MarkerF } from "@react-google-maps/api";
+import { MarkerF, InfoWindow } from "@react-google-maps/api";
 import EventInfo from "./EventNavigation/EventInfo";
 
 function Marker({ place, category }) {
-  const [click, setclick] = useState(false);
+  const alerts = ["Medical", "Crime", "Fire"];
+  const [showInfo, setShowInfo] = useState(false);
   const Icon = {
-    Medical: { src: "/Medical.png", width: 30, height: 60 },
+    Medical: { src: "/Medical.png", width: 30, height: 45 },
     Fire: { src: "/Fire.png", width: 30, height: 60 },
     "Medical-Equipment": {
       src: "/Medical-Equipment.png",
@@ -18,19 +19,29 @@ function Marker({ place, category }) {
   };
 
   return (
-    <MarkerF
-      position={place.geometry.location}
-      icon={{
-        url: Icon[category].src,
-        scaledSize: new window.google.maps.Size(
-          Icon[category].width,
-          Icon[category].height
-        ),
-      }}
-      onClick={() => setclick(!click)}
-    >
-      {/* <EventInfo event={corresponding_event} /> */}
-    </MarkerF>
+    <>
+      <MarkerF
+        position={place.geometry.location}
+        icon={{
+          url: Icon[category].src,
+          scaledSize: new window.google.maps.Size(
+            Icon[category].width,
+            Icon[category].height
+          ),
+        }}
+        onClick={() => setShowInfo(!showInfo)}
+      />
+      {showInfo && alerts.includes(category) && (
+        <InfoWindow
+          position={place.geometry.location}
+          onCloseClick={() => setShowInfo(false)}
+        >
+          <div style={{ width: "300px" }}>
+            <EventInfo event={place} />
+          </div>
+        </InfoWindow>
+      )}
+    </>
   );
 }
 
