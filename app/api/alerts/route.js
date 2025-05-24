@@ -6,7 +6,7 @@ return {
         "id":id,
         "event_code":event_code,
         "event_type":event_type,
-        "geometry":{"location":{"lat":alert_lat,"lng":alert_lng,"address":address||""},"responder":{"lat":responder_lat??null,"lng":responder_lng??null}},
+        "geometry":{"location":{"lat":alert_lat,"lng":alert_lng}},
         "assigned":{
             "volunteers":volunteers ||{
             "basic":[""],
@@ -18,7 +18,6 @@ return {
         "updates":updates || [{"headline":"","description":""}],
         "smart_tech_data":smart_tech_data || {"heart_rate":"","SpO2":"","temperature":""},
         "Media":{"starred":starred_media || "","regular":regular_media || [""]}
-
     }]
 }}
 
@@ -30,12 +29,11 @@ export async function GET(request){
     const Crimeevent1= formatEventdata({id:40,event_code:"RR",event_type:"Burgalry",alert_lat:38.925196855855506,alert_lng:-90.125183317234})
     const MasterOfAlerts={
         "Medical":{
-    "product":{"results":[Medicalevent1]}},
+            "product":{"results":[Medicalevent1.results[0]]}},
         "Fire":{
-    "product":{"results":[Fireevent1]}},
+            "product":{"results":[Fireevent1.results[0]]}},
         "Crime":{
-    "product":{"results":[Crimeevent1]}}
+            "product":{"results":[Crimeevent1.results[0]]}}
     }
-    console.group(MasterOfAlerts)
     return NextResponse.json(MasterOfAlerts[category])
 }

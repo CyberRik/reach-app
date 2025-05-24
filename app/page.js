@@ -7,14 +7,24 @@ import GlobalApi from '@/Shared/GlobalApi';
 
 export default function Home() {
   const [category,setcategory]=useState("Hospitals")
-  const [rad,setrad]=useState(2500)
+  const [rad,setrad]=useState(2500) //not necessarily described in a defined unit of distance
   const [categoryResults,setcategoryResults]=useState([])
 
   const getPlaces=(cate)=>{
     GlobalApi.getGooglePlaces(cate,rad).then((res)=>{
-      console.log(res.data.product.results)
-      setcategoryResults((cat) => [...cat, [cat, res.data.product.results]]);
-    })
+      if (res && res.data) {
+        console.log('API Response for', cate, ':', res.data);
+        const results = res.data.product?.results || res.data.results || [];
+        console.log('Processed results for', cate, ':', results);
+        setcategoryResults((prev) => {
+          const newResults = [...prev, [cate, results]];
+          console.log('Updated categoryResults:', newResults);
+          return newResults;
+        });
+      }
+    }).catch(error => {
+      console.error('Error fetching places for', cate, ':', error);
+    });
   }
   useEffect(()=>{
     setcategoryResults([])

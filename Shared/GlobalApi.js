@@ -9,7 +9,7 @@ const getGooglePlaces = (category, radius) => {
   } else if (resources.includes(category)) {
     return axios.get(`/api/random?${params}`);
   } else {
-    return axios.get(`/api/alerts?${params}`).then(res=>console.log(res));
+    return axios.get(`/api/alerts?${params}`);
   }
 };
 
