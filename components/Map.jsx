@@ -32,15 +32,6 @@ function Map({ results }) {
           icon={{
             url: `/YourLocation.png`,
             scaledSize: { width: 30, height: 30 },
-    <div className="relative opacity-80">
-      <LoadScript googleMapsApiKey={process.env.NEXT_PUBLIC_GOOGLE_API}>
-        <GoogleMap
-          mapContainerStyle={containerStyle}
-          center={center}
-          zoom={12}
-          options={{
-            mapTypeControl: false, 
-            fullscreenControl: false,
           }}
         />
         <CategoryLocations results={results} />
