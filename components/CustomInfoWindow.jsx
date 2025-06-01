@@ -1,13 +1,18 @@
 import React from 'react';
 import { ArrowLeft, MapPin, AlertTriangle, Cross, Map } from "lucide-react";
 
-function CustomInfoWindow({ event, onCloseClick }) {
+function CustomInfoWindow({ event, category }) {
   console.log("EventInfo received event:", event);
-
+  let headerBgClass = 'bg-gradient-to-br from-red-600 via-red-500 to-rose-500'; // Default for Medical
+  if (category === 'Crime') {
+    headerBgClass = 'bg-gradient-to-br from-blue-600 via-blue-500 to-indigo-500'; // Gradient blue for Crime
+  } else if (category === 'Fire') {
+    headerBgClass = 'bg-gradient-to-br from-yellow-500 via-orange-500 to-red-500'; // Gradient orange-red for Fire
+  }
   return (
     <div className="w-64 bg-white rounded-lg shadow-lg">
 
-        <header className="bg-gradient-to-br from-red-600 via-red-500 to-rose-500 text-white p-4 shadow-lg rounded-lg">
+        <header className={`${headerBgClass} text-white p-4 shadow-lg rounded-lg`}>
           <h1 className="text-lg font-bold text-white drop-shadow-sm mb-2">
             {event.event_code} – {event.event_type}
           </h1>
@@ -20,7 +25,7 @@ function CustomInfoWindow({ event, onCloseClick }) {
 
             {event.address && (
               <div className="flex items-center text-sm text-rose-100">
-                <MapPin size={16} className="mr-1 text-emerald-300" />
+                <MapPin size={24} className="mr-1 text-emerald-300" />
                 {event.address}
               </div>
             )}

@@ -39,7 +39,7 @@ function Marker({ place, category }) {
             pixelOffset: new window.google.maps.Size(0, -40),
           }}
         >
-          <CustomInfoWindow event={place} onCloseClick={() => setShowInfo(false)} />
+          <CustomInfoWindow event={place} onCloseClick={() => setShowInfo(false)} category={category} />
         </InfoWindow>
       )}
     </>

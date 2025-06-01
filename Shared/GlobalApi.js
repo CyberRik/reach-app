@@ -13,6 +13,11 @@ const getGooglePlaces = (category, radius) => {
   }
 };
 
+const getAlerts = () => {
+  return axios.get('/api/alerts');
+};
+
 export default {
-  getGooglePlaces
+  getGooglePlaces,
+  getAlerts
 };
