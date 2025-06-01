@@ -36,7 +36,7 @@ export default function CategorySearch({ category, setcategory }) {
     },
   ];
   return (
-    <div className="relative z-120">
+    <div className="absolute top-2 left-3 z-40">
       {toggle ? (
         <>
           <button
