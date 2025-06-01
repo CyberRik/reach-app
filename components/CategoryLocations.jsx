@@ -1,5 +1,5 @@
 import React from "react";
-import Marker from "./marker";
+import Marker from "./Marker";
 
 function CategoryLocations({ results }) {
   return (
