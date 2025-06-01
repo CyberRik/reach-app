@@ -4,7 +4,7 @@ import CategoryLocations from "./CategoryLocations";
 import { MarkerF } from "@react-google-maps/api";
 
 const containerStyle = {
-  width: "1470px",
+  width: "1530px",
   height: "665px",
 };
 

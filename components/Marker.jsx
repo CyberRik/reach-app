@@ -1,6 +1,6 @@
 import React, { useState } from "react";
 import { MarkerF, InfoWindow } from "@react-google-maps/api";
-import EventInfo from "./EventNavigation/EventInfo";
+import CustomInfoWindow from "./CustomInfoWindow";
 
 function Marker({ place, category }) {
   const alerts = ["Medical", "Crime", "Fire"];
@@ -35,10 +35,11 @@ function Marker({ place, category }) {
         <InfoWindow
           position={place.geometry.location}
           onCloseClick={() => setShowInfo(false)}
+          options={{
+            pixelOffset: new window.google.maps.Size(0, -40),
+          }}
         >
-          <div style={{ width: "300px" }}>
-            <EventInfo event={place} />
-          </div>
+          <CustomInfoWindow event={place} onCloseClick={() => setShowInfo(false)} />
         </InfoWindow>
       )}
     </>

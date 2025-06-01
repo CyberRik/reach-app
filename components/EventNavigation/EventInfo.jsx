@@ -1,52 +1,65 @@
-import React from "react";
-import { ArrowLeft, MapPin, AlertTriangle, Cross, Map } from "lucide-react";
+import { Link, useLocation } from "wouter";
+import { ClipboardList, ImageIcon, PhoneCall, Map } from "lucide-react";
 
-function EventInfo({ event }) {
+export default function BottomNavigation() {
+  const [location] = useLocation();
+
+  const isActive = (path) => location === path;
+
   return (
-    <header className="bg-emergency-red text-white p-4 shadow-md">
-      <div className="flex items-center">
-        <button className="mr-2">
-          {" "}
-          //back arrow not configured */
-          <ArrowLeft size={20} />
-        </button>
-        <h1 className="text-lg font-bold">
-          {event.event_code} - {event.event_type}
-        </h1>
-      </div>
-
-      <div className="mt-2 text-sm flex flex-wrap gap-1">
-        <div className="flex items-center mr-4">
-          <MapPin size={16} className="mr-1" />
-          <span>{event.address}</span>
-        </div>
-        <div className="flex items-center">
-          <AlertTriangle size={16} className="mr-1" />
-          <span>
-            Assigned: {event.assigned?.responders?.join(", ") || "None"}
-          </span>{" "}
-          //check
-        </div>
-      </div>
-
-      {event.status_message && (
-        <div className="flex justify-between items-center mt-2">
-          <div className="flex items-center">
-            <Cross size={16} className="mr-1" />
-            <span className="text-sm">{event.status_message}</span>
+    <nav className="fixed bottom-0 w-full bg-white border-t border-gray-200 shadow-lg">
+      <div className="flex justify-around p-3">
+        <Link href="/info">
+          <div className="flex flex-col items-center">
+            <ClipboardList
+              size={20}
+              className={
+                isActive("/info") ? "text-emergency-red" : "text-gray-500"
+              }
+            />
+            <span className="text-xs mt-1">Info</span>
           </div>
+        </Link>
 
-          <button
-            onClick={onViewMap}
-            className="flex items-center p-1 bg-white bg-opacity-20 rounded"
-          >
-            <Map size={14} className="mr-1" />
-            <span className="text-xs">View Map</span>
-          </button>
-        </div>
-      )}
-    </header>
+        <Link href="/media">
+          <div className="flex flex-col items-center">
+            <ImageIcon
+              size={20}
+              className={
+                isActive("/media") ? "text-emergency-red" : "text-gray-500"
+              }
+            />
+            <span className="text-xs mt-1">Media</span>
+          </div>
+        </Link>
+
+        <Link href="/voice">
+          <div className="flex flex-col items-center">
+            <PhoneCall
+              size={20}
+              className={
+                isActive("/voice") ? "text-emergency-red" : "text-gray-500"
+              }
+            />
+            <span className="text-xs mt-1">Voice</span>
+          </div>
+        </Link>
+
+        <Link href="/map">
+          <div className="flex flex-col items-center">
+            <Map
+              size={20}
+              className={
+                isActive("/map") ? "text-emergency-red" : "text-gray-500"
+              }
+            />
+            <span className="text-xs mt-1">Map</span>
+          </div>
+        </Link>
+      </div>
+    </nav>
   );
 }
 
-export default EventInfo;
+
+
