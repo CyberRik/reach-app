@@ -4,8 +4,9 @@ import CategoryLocations from "./CategoryLocations";
 import { MarkerF } from "@react-google-maps/api";
 
 const containerStyle = {
-  width: "1470px",
-  height: "665px",
+  width: "100%",
+  height: "100vh",
+  position: "absolute",
 };
 
 const center = {
@@ -22,7 +23,7 @@ function Map({ results, category }) {
           center={center}
           zoom={12}
           options={{
-            mapTypeControl: false, // Hides the Map/Satellite toggle
+            mapTypeControl: false, 
             fullscreenControl: false,
           }}
         >
