@@ -4,8 +4,8 @@ import CategoryLocations from "./CategoryLocations";
 import { MarkerF } from "@react-google-maps/api";
 
 const containerStyle = {
-  width: "1470px",
-  height: "665px",
+  width: "100vw",
+  height: "100vh",
 };
 
 const center = {
@@ -15,7 +15,7 @@ const center = {
 
 function Map({ results, category }) {
   return (
-    <div className="relative opacity-80">
+    <div className="fixed inset-0 z-0">
       <LoadScript googleMapsApiKey={process.env.NEXT_PUBLIC_GOOGLE_API}>
         <GoogleMap
           mapContainerStyle={containerStyle}
