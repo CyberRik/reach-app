@@ -6,10 +6,10 @@ import { MarkerF } from "@react-google-maps/api";
 
 const containerStyle = {
   width: "100%",
-  height: "calc(100vh - 52px)",
-  position: "absolute",
-  top: "52px",
-  left: 0,
+  height: "calc(100vh - 64px)", // adjust 64px to your header's height
+  marginTop: "64px",            // same as above
+  position: "relative",
+  zIndex: 0,
 };
 
 const center = {
