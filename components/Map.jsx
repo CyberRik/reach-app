@@ -8,6 +8,8 @@ const containerStyle = {
   width: "100%",
   height: "calc(100vh - 52px)",
   position: "absolute",
+  top: "52px",
+  left: 0,
 };
 
 const center = {
