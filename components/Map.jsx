@@ -6,8 +6,9 @@ import { MarkerF } from "@react-google-maps/api";
 
 const containerStyle = {
   width: "100%",
-  height: "calc(100vh - 52px)",
-  position: "absolute",
+  height: "100%",
+  position: "relative",
+  zIndex: 0,
 };
 
 const center = {
@@ -19,7 +20,7 @@ function Map({ results }) {
   return (
     <LoadScript googleMapsApiKey={process.env.NEXT_PUBLIC_GOOGLE_API}>
       <GoogleMap
-        mapContainerStyle={{ width: '100%', height: '100%', opacity: 0.8 }}
+        mapContainerStyle={containerStyle}
         center={center}
         zoom={12}
         options={{
