@@ -46,7 +46,7 @@ function Header() {
 
   return (
     <>
-      <nav className="flex justify-between pl-4 pr-8 bg-gray-50 items-center">
+      <nav className="flex justify-between pl-4 pr-4 bg-gray-50 items-center">
         <div className="flex items-center m-3">
           <Image
             className="mx-4 cursor-pointer"
