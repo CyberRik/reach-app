@@ -7,17 +7,19 @@ export default function ActiveEvents({ alerts }) {
 
   return (
     <>
-      {/* Backdrop when expanded */}
+      {/* Semi-transparent backdrop when expanded */}
       {isExpanded && (
         <div
-          className="fixed inset-0 bg-black bg-opacity-40 z-50"
+          className="fixed inset-0 bg-black/10 z-40"
           onClick={() => setIsExpanded(false)}
         />
       )}
 
       {/* Dashboard Container - Positioned at the bottom, slightly shorter, and styled */}
       <div
-        className={`fixed bottom-0 left-1/2 w-[600px] bg-white shadow-lg rounded-lg border border-gray-200 transition-transform duration-300 ease-in-out z-60 transform -translate-x-1/2 ${isExpanded ? 'translate-y-0' : 'translate-y-[calc(100%-120px)]'}`}
+        className={`fixed bottom-0 left-1/2 w-[600px] bg-white shadow-lg rounded-t-lg border border-gray-200 transition-transform duration-300 ease-in-out z-50 transform -translate-x-1/2 ${
+          isExpanded ? 'translate-y-0' : 'translate-y-[calc(100%-120px)]'
+        }`}
       >
         {/* Header - Always visible */}
         <div className="flex items-center justify-between p-4 border-b border-gray-200">
@@ -64,7 +66,7 @@ export default function ActiveEvents({ alerts }) {
                 </div>
               ))}
               {(!alerts || alerts.length === 0) && (
-                <div className="text-center py-8 text-gray-500 dark:text-muted-foreground">
+                <div className="text-center py-8 text-gray-500">
                   No active alerts
                 </div>
               )}

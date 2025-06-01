@@ -95,43 +95,43 @@ function Header() {
         contentLabel="Settings"
         ariaHideApp={false}
         shouldCloseOnOverlayClick={true}
-        className="absolute right-0 top-1/13 w-64 bg-white shadow-lg rounded-md p-4 z-50"
-        overlayClassName="fixed inset-0 bg-transparent"
+        className="fixed top-16 right-4 w-64 bg-white shadow-xl rounded-md p-4 z-[100]"
+        overlayClassName="fixed inset-0 bg-black/20 z-[90]"
       >
         <div className="modal-content">
           <h2 className="text-lg font-bold mb-2 text-black">User</h2>
-          <div className="text-gray-700 cursor-pointer mx-4">
-            <div>Profile</div>
-            <div>Certifications</div>
-            <div>Activity History</div>
-            <div>Event Codes</div>
-            <div>Feedback and Community</div>
-            <div>Redeem Gifts</div>
+          <div className="text-gray-700 cursor-pointer mx-4 space-y-2">
+            <div className="hover:bg-gray-100 p-1 rounded">Profile</div>
+            <div className="hover:bg-gray-100 p-1 rounded">Certifications</div>
+            <div className="hover:bg-gray-100 p-1 rounded">Activity History</div>
+            <div className="hover:bg-gray-100 p-1 rounded">Event Codes</div>
+            <div className="hover:bg-gray-100 p-1 rounded">Feedback and Community</div>
+            <div className="hover:bg-gray-100 p-1 rounded">Redeem Gifts</div>
           </div>
 
-          <h2 className="text-lg font-bold mb-2 mt-2 text-black">Settings</h2>
-          <div className="text-gray-700 cursor-pointer mx-4">
-            <div>Notification</div>
-            <div>App Customization</div>
-            <div>Device Integration</div>
-            <div>Account Management</div>
-            <div>Feedback and Community</div>
-            <div>Legal and Policies</div>
+          <h2 className="text-lg font-bold mb-2 mt-4 text-black">Settings</h2>
+          <div className="text-gray-700 cursor-pointer mx-4 space-y-2">
+            <div className="hover:bg-gray-100 p-1 rounded">Notification</div>
+            <div className="hover:bg-gray-100 p-1 rounded">App Customization</div>
+            <div className="hover:bg-gray-100 p-1 rounded">Device Integration</div>
+            <div className="hover:bg-gray-100 p-1 rounded">Account Management</div>
+            <div className="hover:bg-gray-100 p-1 rounded">Feedback and Community</div>
+            <div className="hover:bg-gray-100 p-1 rounded">Legal and Policies</div>
           </div>
           
-          <div className="flex justify-between">
-          <button
-            onClick={logout}
-            className="mt-2 px-4 py-2 bg-red-600 text-white rounded-md hover:bg-red-700"
-          >
-            Logout
-          </button>
-          <button
-            onClick={closeModal}
-            className="mt-2 px-4 py-2 bg-gray-700 text-white rounded-md hover:bg-gray-800"
-          >
-            Close
-          </button>
+          <div className="flex justify-between mt-4">
+            <button
+              onClick={logout}
+              className="px-4 py-2 bg-red-600 text-white rounded-md hover:bg-red-700 text-sm"
+            >
+              Logout
+            </button>
+            <button
+              onClick={closeModal}
+              className="px-4 py-2 bg-gray-700 text-white rounded-md hover:bg-gray-800 text-sm"
+            >
+              Close
+            </button>
           </div>
         </div>
       </Modal>
