@@ -4,8 +4,9 @@ import CategoryLocations from "./CategoryLocations";
 import { MarkerF } from "@react-google-maps/api";
 
 const containerStyle = {
-  width: "100vw",
+  width: "100%",
   height: "100vh",
+  position: "absolute",
 };
 
 const center = {
@@ -15,14 +16,14 @@ const center = {
 
 function Map({ results, category }) {
   return (
-    <div className="fixed inset-0 z-0">
+    <div className="relative opacity-80">
       <LoadScript googleMapsApiKey={process.env.NEXT_PUBLIC_GOOGLE_API}>
         <GoogleMap
           mapContainerStyle={containerStyle}
           center={center}
           zoom={12}
           options={{
-            mapTypeControl: false, // Hides the Map/Satellite toggle
+            mapTypeControl: false, 
             fullscreenControl: false,
           }}
         >
