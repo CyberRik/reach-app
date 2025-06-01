@@ -3,7 +3,6 @@ import { GoogleMap, LoadScript } from "@react-google-maps/api";
 import CategoryLocations from "./CategoryLocations";
 import { MarkerF } from "@react-google-maps/api";
 
-
 const containerStyle = {
   width: "100%",
   height: "calc(100vh - 52px)",
@@ -15,23 +14,8 @@ const center = {
   lng: -90.1910154,
 };
 
-function Map({ results }) {
+function Map({ results, category }) {
   return (
-    <LoadScript googleMapsApiKey={process.env.NEXT_PUBLIC_GOOGLE_API}>
-      <GoogleMap
-        mapContainerStyle={{ width: '100%', height: '100%', opacity: 0.8 }}
-        center={center}
-        zoom={12}
-        options={{
-          mapTypeControl: false,
-          fullscreenControl: false,
-        }}
-      >
-        <MarkerF
-          position={center}
-          icon={{
-            url: `/YourLocation.png`,
-            scaledSize: { width: 30, height: 30 },
     <div className="relative opacity-80">
       <LoadScript googleMapsApiKey={process.env.NEXT_PUBLIC_GOOGLE_API}>
         <GoogleMap
@@ -42,10 +26,18 @@ function Map({ results }) {
             mapTypeControl: false, 
             fullscreenControl: false,
           }}
-        />
-        <CategoryLocations results={results} />
-      </GoogleMap>
-    </LoadScript>
+        >
+          <MarkerF
+            position={center}
+            icon={{
+              url: `/YourLocation.png`,
+              scaledSize: { width: 30, height: 30 },
+            }}
+          />
+          <CategoryLocations results={results} />
+        </GoogleMap>
+      </LoadScript>
+    </div>
   );
 }
 export default Map;
