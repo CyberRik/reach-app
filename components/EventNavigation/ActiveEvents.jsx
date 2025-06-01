@@ -3,7 +3,7 @@ import { ChevronUp, ChevronDown, Phone, AlertTriangle, MapPin, Clock } from "luc
 import EventCard from "./EventCard";
 
 export default function ActiveEvents({ alerts }) {
-  const [isExpanded, setIsExpanded] = useState(true);
+  const [isExpanded, setIsExpanded] = useState(false);
 
   return (
     <>
