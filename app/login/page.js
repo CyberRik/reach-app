@@ -78,7 +78,7 @@ export default function LoginPage() {
             >
               Sign in
             </button>
-            <p className="text-center text-sm">
+            <p className="text-center text-sm text-black">
               Need an account?{' '}
               <Link href="/register" className="font-medium text-indigo-600 hover:text-indigo-500">
                 Sign up
