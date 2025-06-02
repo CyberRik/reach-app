@@ -6,6 +6,7 @@ export default function RegistrationForm() {
     name: '',
     age: '',
     phoneNumber: '',
+    password: '', // Add password field
     bloodGroup: 'B+',
     allergies: 'None',
     medicalConditions: 'Asthma',
@@ -25,6 +26,8 @@ export default function RegistrationForm() {
     hasSmartDevice: false,
     termsAccepted: false
   });
+
+  const [showPassword, setShowPassword] = useState(false); // State to toggle password visibility
 
   const handleInputChange = (e) => {
     const { name, value, type, checked } = e.target;
@@ -71,7 +74,7 @@ export default function RegistrationForm() {
       <div className="max-w-3xl mx-auto">
         <div className="text-center mb-8">
           <img
-            src="/path-to-your-logo.png"
+            src="/public/reach_logo.png"
             alt="R.E.A.C.H Logo"
             className="mx-auto h-24 w-24 mb-4"
           />
@@ -128,6 +131,29 @@ export default function RegistrationForm() {
                   className="shadow appearance-none border rounded w-full py-2 px-3 text-gray-700 leading-tight focus:outline-none focus:ring-2 focus:ring-blue-500"
                   required
                 />
+              </div>
+              <div>
+                <label className="block text-gray-700 text-sm font-bold mb-2" htmlFor="password">
+                  Password
+                </label>
+                <div className="relative">
+                  <input
+                    type={showPassword ? 'text' : 'password'}
+                    id="password"
+                    name="password"
+                    value={formData.password}
+                    onChange={handleInputChange}
+                    className="shadow appearance-none border rounded w-full py-2 px-3 text-gray-700 leading-tight focus:outline-none focus:ring-2 focus:ring-blue-500"
+                    required
+                  />
+                  <button
+                    type="button"
+                    onClick={() => setShowPassword(!showPassword)}
+                    className="absolute inset-y-0 right-0 px-3 py-2 text-sm text-gray-600 focus:outline-none"
+                  >
+                    {showPassword ? 'Hide' : 'Show'}
+                  </button>
+                </div>
               </div>
             </div>
           </div>
@@ -424,4 +450,4 @@ export default function RegistrationForm() {
       </div>
     </div>
   );
-} 
+}
