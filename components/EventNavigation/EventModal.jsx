@@ -15,14 +15,12 @@ const statusColors = {
   resolved: 'bg-green-200 text-green-800 border border-green-400 shadow-sm',
 };
 
-// Mock data based on image for demonstration
-const mockUpdates = [
-  { time: '9:41 AM', text: 'Volunteer #1234 is assisting with CPR. Defibrillator still needed.' },
-  { time: '9:41 AM', text: 'Ambulance WGN-2021 & 5 minutes away. Team ready for defibrillator use.' },
-  { time: '9:41 AM', text: 'Volunteer #22 picked up a defibrillator from the nearest facility, ETA 3 minutes.' },
-  { time: '9:41 AM', text: "Patient's pulse is weak. First responders recommend additional oxygen support." },
-  { time: '9:41 AM', text: 'Oxygen mask and kit required urgently. Volunteer #12 coordinating with nearby clinic.' },
-];
+// Define header background colors based on category
+const headerColors = {
+  Medical: 'bg-red-600 text-white',
+  Fire: 'bg-orange-500 text-white',
+  Crime: 'bg-blue-600 text-white',
+};
 
 const mockVoiceChannels = [
   { label: 'On Ground - Connected', participants: 'Vol #122,159,12', count: 3, icon: Wifi },
@@ -80,15 +78,15 @@ export default function EventModal({ incident, setModal }) {
         <div className="flex items-start justify-between">
           <div>
             <h2 className="text-2xl font-bold text-gray-900 mb-2">
-              CVX - Cardiac Event
+              {incident.event_code} - {incident.event_type}
             </h2>
             <div className="text-gray-600 text-sm mb-2">ID: #{incident.id.toString().padStart(4, '0')}</div>
-            <div className="text-gray-600 text-sm mb-4">Ramanujam Block, Hostel Avenue<br/>IIT Madras</div>
+            <div className="text-gray-600 text-sm mb-4">{incident.address}</div>
 
             <div className="flex items-center space-x-4 text-sm mb-2">
               <div className="flex items-center space-x-1">
                 <User className="w-4 h-4 text-gray-400" />
-                <span className="text-gray-600">Assigned: <span className="font-semibold">WGN-2021</span></span>
+                <span className="text-gray-600">Assigned: <span className="font-semibold">{incident.assigned?.responders?.join(', ') || 'N/A'}</span></span>
               </div>
               <div className="flex items-center space-x-1">
                 <Clock className="w-4 h-4 text-gray-400" />
@@ -98,14 +96,28 @@ export default function EventModal({ incident, setModal }) {
 
             <div className={`flex items-center space-x-2 mb-4 rounded-md px-3 py-1 ${statusColor}`}>
               <AlertTriangle className="w-5 h-5" />
-              <span className="font-semibold">Status - Defibrillator Needed</span>
+              <span className="font-semibold">Status - {incident.status_message || (incident.status ? incident.status.replace('_', ' ').toUpperCase() : 'N/A')}</span>
             </div>
 
             <div className="space-y-1 mb-4">
               <div className="font-semibold text-gray-900">Volunteers</div>
               <ul className="list-disc list-inside text-gray-700 text-sm">
-                <li>Basic - #1234, #22</li>
-                <li>Intermediate - #12</li>
+                {/* Display Basic volunteers on a single line if any exist */}
+                {incident.assigned?.volunteers?.basic && incident.assigned.volunteers.basic.filter(vol => vol).length > 0 && (
+                  <li>Basic - {incident.assigned.volunteers.basic.filter(vol => vol).join(', ')}</li>
+                )}
+                {/* Display Intermediate volunteers on a single line if any exist */}
+                {incident.assigned?.volunteers?.Intermediate && incident.assigned.volunteers.Intermediate.filter(vol => vol).length > 0 && (
+                  <li>Intermediate - {incident.assigned.volunteers.Intermediate.filter(vol => vol).join(', ')}</li>
+                )}
+                {/* Display Advanced volunteers on a single line if any exist */}
+                {incident.assigned?.volunteers?.Advanced && incident.assigned.volunteers.Advanced.filter(vol => vol).length > 0 && (
+                  <li>Advanced - {incident.assigned.volunteers.Advanced.filter(vol => vol).join(', ')}</li>
+                )}
+                {/* Display N/A if no volunteers in any category */}
+                {(!incident.assigned?.volunteers?.basic?.filter(vol => vol).length && !incident.assigned?.volunteers?.Intermediate?.filter(vol => vol).length && !incident.assigned?.volunteers?.Advanced?.filter(vol => vol).length) && (
+                  <li>N/A</li>
+                )}
               </ul>
             </div>
           </div>
@@ -117,16 +129,19 @@ export default function EventModal({ incident, setModal }) {
 
         <div className="space-y-3">
           <h3 className="font-semibold text-gray-900">Updates</h3>
-          <button className="bg-green-500 text-white px-4 py-2 rounded-md hover:bg-green-600 transition text-sm">
-            Respond Now
-          </button>
           <div className="space-y-3">
-            {mockUpdates.map((update, index) => (
+            {incident.updates && incident.updates.map((update, index) => (
               <div key={index} className="bg-gray-100 p-3 rounded-md flex justify-between items-start shadow-sm">
-                <p className="text-sm text-gray-900 pr-4">{update.text}</p>
-                <span className="text-xs text-gray-700 flex-shrink-0">{update.time}</span>
+                <div>
+                  {update.headline && <p className="font-semibold text-sm text-gray-900 mb-1">{update.headline}</p>}
+                  <p className="text-sm text-gray-900 pr-4">{update.description}</p>
+                </div>
+                <span className="text-xs text-gray-700 flex-shrink-0">{update.time ? formatDistanceToNow(new Date(update.time), { addSuffix: true }) : 'Unknown'}</span>
               </div>
             ))}
+            {(!incident.updates || incident.updates.length === 0) && (
+              <div className="text-sm text-gray-600 italic">No updates available.</div>
+            )}
           </div>
         </div>
       </div>
@@ -136,23 +151,22 @@ export default function EventModal({ incident, setModal }) {
   const renderMediaTab = () => (
     <div className="p-6 bg-white">
       <h3 className="font-semibold text-gray-900 mb-4">Smart Tech Data</h3>
-      <div className="grid grid-cols-3 gap-4 text-center text-sm mb-6">
-        <div className="rounded-lg p-2 shadow-sm bg-red-100 text-red-800 border border-red-400">
-          <Heart className="w-5 h-5 mx-auto mb-1" />
-          <div className="font-semibold">35 BPM</div>
-          <div className="text-xs">(Low)</div>
+      {incident.smart_tech_data && (
+        <div className="grid grid-cols-3 gap-4 text-center text-sm mb-6">
+          <div className="rounded-lg p-2 shadow-sm bg-red-100 text-red-800 border border-red-400">
+            <Heart className="w-5 h-5 mx-auto mb-1" />
+            <div className="font-semibold">{incident.smart_tech_data.heart_rate}</div>
+          </div>
+          <div className="rounded-lg p-2 shadow-sm bg-blue-100 text-blue-800 border border-blue-400">
+            <Droplet className="w-5 h-5 mx-auto mb-1" />
+            <div className="font-semibold">{incident.smart_tech_data.SpO2}</div>
+          </div>
+          <div className="rounded-lg p-2 shadow-sm bg-orange-100 text-orange-800 border border-orange-400">
+            <Thermometer className="w-5 h-5 mx-auto mb-1" />
+            <div className="font-semibold">{incident.smart_tech_data.temperature}</div>
+          </div>
         </div>
-        <div className="rounded-lg p-2 shadow-sm bg-blue-100 text-blue-800 border border-blue-400">
-          <Droplet className="w-5 h-5 mx-auto mb-1" />
-          <div className="font-semibold">92%</div>
-          <div className="text-xs">(Low)</div>
-        </div>
-        <div className="rounded-lg p-2 shadow-sm bg-orange-100 text-orange-800 border border-orange-400">
-          <Thermometer className="w-5 h-5 mx-auto mb-1" />
-          <div className="font-semibold">37.8°C</div>
-          <div className="text-xs">(Fever)</div>
-        </div>
-      </div>
+      )}
 
       <button className="w-full px-4 py-2 bg-gray-300 text-gray-900 rounded-md hover:bg-gray-400 transition">
         Medical Records
@@ -276,14 +290,14 @@ export default function EventModal({ incident, setModal }) {
   return (
     <div className="fixed inset-0 z-50 flex items-center justify-center bg-black bg-opacity-30">
       <div className="bg-white rounded-lg shadow-xl w-full max-w-2xl max-h-[90vh] flex flex-col">
-        <div className="flex items-center justify-between p-4 bg-red-600 text-white border-b border-red-700 shadow">
+        <div className={`flex items-center justify-between p-4 border-b border-red-700 shadow ${headerColors[incident.category] || 'bg-gray-600 text-white'}`}>
           <div className="flex items-center space-x-3">
             <div className="w-12 h-12 bg-red-700 rounded-full flex items-center justify-center shadow-md">
               <AlertTriangle className="w-6 h-6 text-white" />
             </div>
             <div>
-              <h2 className="font-bold text-white">CVX - Cardiac Event</h2>
-              <p className="text-sm text-red-200">Emergency Response Active</p>
+              <h2 className="font-bold text-white">{incident.event_code} - {incident.event_type}</h2>
+              <p className="text-sm text-red-200">Emergency Response Active - {timeAgo}</p>
             </div>
           </div>
           <button 

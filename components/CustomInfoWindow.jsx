@@ -1,5 +1,5 @@
 import React from 'react';
-import { ArrowLeft, MapPin, AlertTriangle, Cross, Map } from "lucide-react";
+import { ArrowLeft, MapPin, AlertTriangle, Cross, Map, Clock } from "lucide-react";
 
 function CustomInfoWindow({ event, category }) {
   console.log("EventInfo received event:", event);
@@ -17,19 +17,23 @@ function CustomInfoWindow({ event, category }) {
             {event.event_code} – {event.event_type}
           </h1>
 
-          <div className="flex flex-wrap gap-4 mb-2">
+          <div className="flex items-center gap-4 mb-2">
             <div className="flex items-center text-sm text-rose-100">
               <AlertTriangle size={16} className="mr-1 text-yellow-300" />
               Assigned: {event.assigned?.responders?.join(", ") || "None"}
             </div>
-
-            {event.address && (
-              <div className="flex items-center text-sm text-rose-100">
-                <MapPin size={24} className="mr-1 text-emerald-300" />
-                {event.address}
-              </div>
-            )}
+            <div className="flex items-center text-sm text-rose-100">
+              <Clock size={16} className="mr-1 text-yellow-300" />
+              ETA: 10:56
+            </div>
           </div>
+
+          {event.address && (
+            <div className="flex items-center text-sm text-rose-100">
+              <MapPin size={24} className="mr-1 text-emerald-300" />
+              {event.address}
+            </div>
+          )}
 
           {event.status_message && (
             <div className="flex justify-between items-center mt-2">

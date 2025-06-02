@@ -50,12 +50,12 @@ export default function EventCard({ incident, onClick }) {
             {icon}
           </div>
           <div className="font-bold text-lg leading-tight text-gray-800">
-            {incident.event_code} - {incident.type ? incident.type.charAt(0).toUpperCase() + incident.type.slice(1) : "N/A"}
+            {incident.event_code} - {incident.event_type || "N/A"}
           </div>
         </div>
         <div className="text-right text-xs leading-tight text-gray-600">
-          <div>Reported: {reportedTime}</div>
-          <div>Volunteers: {incident.volunteers || "N/A"}</div>
+          <div>Reported: {incident.reportedAt ? formatDistanceToNow(new Date(incident.reportedAt), { addSuffix: false }) : "Unknown"}</div>
+          <div>Volunteers: {(incident.assigned?.volunteers?.basic?.length > 0 || incident.assigned?.volunteers?.Intermediate?.length > 0 || incident.assigned?.volunteers?.Advanced?.length > 0) ? 'Yes' : 'N/A'}</div>
           <div>ID: #{incident.event_code || incident.id || "N/A"}</div>
         </div>
       </div>
