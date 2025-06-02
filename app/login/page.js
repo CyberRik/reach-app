@@ -35,6 +35,18 @@ export default function LoginPage() {
             Sign in to your account
           </h2>
         </div>
+
+        {/* Back Button */}
+        <div className="absolute top-4 left-4">
+          <button
+            type="button"
+            onClick={() => router.back()} // Navigate to the previous page
+            className="bg-gray-300 hover:bg-gray-400 text-gray-800 font-bold py-2 px-4 rounded focus:outline-none focus:ring-2 focus:ring-gray-500 focus:ring-offset-2"
+          >
+            Back
+          </button>
+        </div>
+
         <form className="mt-8 space-y-6" onSubmit={handleSubmit}>
           <div className="rounded-md shadow-sm -space-y-px">
             <div>

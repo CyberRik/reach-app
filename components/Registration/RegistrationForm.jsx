@@ -1,7 +1,9 @@
 import { useState } from 'react';
+import { useRouter } from 'next/navigation'; // Import useRouter for navigation
 import { Upload } from 'lucide-react';
 
 export default function RegistrationForm() {
+  const router = useRouter(); // Initialize the router for navigation
   const [formData, setFormData] = useState({
     name: '',
     age: '',
@@ -82,6 +84,17 @@ export default function RegistrationForm() {
           <p className="mt-2 italic text-gray-600">
             "No matter your skills, there's always a way to help. Let's make a difference together."
           </p>
+
+          {/* Back Button */}
+          <div className="absolute top-4 left-4">
+            <button
+              type="button"
+              onClick={() => router.back()} // Navigate to the previous page
+              className="bg-gray-300 hover:bg-gray-400 text-gray-800 font-bold py-2 px-4 rounded focus:outline-none focus:ring-2 focus:ring-gray-500 focus:ring-offset-2"
+            >
+              Back
+            </button>
+          </div>
         </div>
 
         <form onSubmit={handleSubmit} className="bg-white shadow-lg rounded-lg px-8 pt-6 pb-8 mb-4 space-y-6">
@@ -434,6 +447,8 @@ export default function RegistrationForm() {
               </span>
             </label>
           </div>
+
+
 
           {/* Submit Button */}
           <div className="flex items-center justify-center">
