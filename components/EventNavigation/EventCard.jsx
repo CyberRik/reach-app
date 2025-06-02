@@ -7,6 +7,13 @@ const typeColors = {
   crime: "bg-blue-100 text-blue-600",
 };
 
+const serviceTypeIcons = {
+  hospital: '🏥',
+  fire_station: '🚒',
+  police: '👮',
+  ambulance: '🚑',
+};
+
 const typeIcons = {
   medical: <AlertTriangle className="w-6 h-6" />,
   fire: <AlertTriangle className="w-6 h-6" />,
@@ -29,6 +36,8 @@ export default function EventCard({ incident, onClick }) {
   const reportedTime = incident.reportedAt
     ? formatDistanceToNow(new Date(incident.reportedAt), { addSuffix: false })
     : "Unknown";
+
+
 
   return (
     <div

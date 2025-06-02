@@ -2,7 +2,7 @@ import { useState } from "react";
 import { ChevronUp, ChevronDown, Phone, AlertTriangle, MapPin, Clock } from "lucide-react";
 import EventCard from "./EventCard";
 
-export default function ActiveEvents({ alerts }) {
+export default function ActiveEvents({ alerts,setEvent,setModal }) {
   const [isExpanded, setIsExpanded] = useState(false);
 
   return (
@@ -56,7 +56,11 @@ export default function ActiveEvents({ alerts }) {
             {/* Content Area with padding and spacing for cards */}
             <div className="flex-1 overflow-y-auto p-4 space-y-4">
               {alerts && alerts.map((incident) => (
-                <div key={incident.id}>
+                <div key={incident.id} 
+                onClick={() => {
+                  setEvent(incident)
+                  setModal(true)
+                  }}>
                   <EventCard
                     incident={incident}
                     onClick={() => {

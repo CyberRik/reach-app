@@ -5,12 +5,15 @@ import CategorySearch from "@/components/CategorySearch";
 import {useState,useEffect} from 'react'
 import GlobalApi from '@/Shared/GlobalApi';
 import ActiveEvents from "@/components/EventNavigation/ActiveEvents";
+import EventModal from "@/components/EventNavigation/EventModal";
 
 export default function Home() {
   const [category,setcategory]=useState("Hospitals")
   const [rad,setrad]=useState(2500) //not necessarily described in a defined unit of distance
   const [categoryResults,setcategoryResults]=useState([])
   const [alerts,setalerts]=useState([])
+  const [modal,setModal]=useState(false)
+  const [event,setEvent]=useState(null)
 
   const getPlaces=(cate)=>{
     GlobalApi.getGooglePlaces(cate,rad).then((res)=>{
@@ -79,7 +82,11 @@ export default function Home() {
       <Map results={categoryResults} className="w-full h-full"/> {/* Ensure Map fills its absolute parent */}
     </div>
 
-    <ActiveEvents alerts={alerts} onIncidentSelect={(incident) => console.log('Incident selected:', incident)} />
+    <ActiveEvents alerts={alerts} setModal={setModal} setEvent={setEvent} onIncidentSelect={(incident) => console.log('Incident selected:', incident)} />
+      {modal ? 
+      (<EventModal setModal={setModal} incident={event}/>):
+      null
+      }
   </>
   );
 }
