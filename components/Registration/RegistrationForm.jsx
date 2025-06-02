@@ -5,16 +5,16 @@ import { Upload } from 'lucide-react';
 export default function RegistrationForm() {
   const router = useRouter(); // Initialize the router for navigation
   const [formData, setFormData] = useState({
-    name: '',
-    age: '',
-    phoneNumber: '',
+    name: 'Sarah Williams',
+    age: '26',
+    phoneNumber: '1234567890', // Example phone number
     password: '', // Add password field
     bloodGroup: 'B+',
     allergies: 'None',
     medicalConditions: 'Asthma',
-    medications: '',
-    emergencyContactName: '',
-    emergencyContactPhone: '',
+    medications: 'Atorvastatin, Albuterol, Metformin, Lisinopril',
+    emergencyContactName: 'Brian Williams',
+    emergencyContactPhone: '9876543210', // Example emergency contact phone number
     previousExperience: false,
     experienceTypes: {
       cpr: false,
