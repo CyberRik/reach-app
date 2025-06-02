@@ -5,7 +5,7 @@ import { useRouter } from 'next/navigation';
 import Link from 'next/link';
 
 export default function LoginPage() {
-  const [email, setEmail] = useState('');
+  const [phoneNumber, setPhoneNumber] = useState('');
   const [password, setPassword] = useState('');
   const router = useRouter();
 
@@ -13,7 +13,7 @@ export default function LoginPage() {
     e.preventDefault();
     
     // Check for demo credentials
-    if (email === 'user@gmail.com' && password === 'password') {
+    if (phoneNumber === '1234567890' && password === 'password') {
       // Set login state in localStorage
       localStorage.setItem('isLoggedIn', 'true');
       localStorage.setItem('userProfilePicture', '/pfp.png');
@@ -21,7 +21,7 @@ export default function LoginPage() {
       // Redirect to the map page
       router.push('/');
     } else {
-      alert('Invalid credentials. Please use demo credentials:\nEmail: user@gmail.com\nPassword: password');
+      alert('Invalid credentials. Please use demo credentials:\nPhone: 1234567890\nPassword: password');
     }
   };
 
@@ -38,19 +38,19 @@ export default function LoginPage() {
         <form className="mt-8 space-y-6" onSubmit={handleSubmit}>
           <div className="rounded-md shadow-sm -space-y-px">
             <div>
-              <label htmlFor="email-address" className="sr-only">
-                Email address
+              <label htmlFor="phone-number" className="sr-only">
+                Phone Number
               </label>
               <input
-                id="email-address"
-                name="email"
-                type="email"
-                autoComplete="email"
+                id="phone-number"
+                name="phoneNumber"
+                type="tel"
+                autoComplete="tel"
                 required
                 className="appearance-none rounded-none relative block w-full px-3 py-2 border border-gray-300 placeholder-gray-500 text-gray-900 rounded-t-md focus:outline-none focus:ring-indigo-500 focus:border-indigo-500 focus:z-10 sm:text-sm"
-                placeholder="Email address"
-                value={email}
-                onChange={(e) => setEmail(e.target.value)}
+                placeholder="Phone Number"
+                value={phoneNumber}
+                onChange={(e) => setPhoneNumber(e.target.value)}
               />
             </div>
             <div>
@@ -89,4 +89,4 @@ export default function LoginPage() {
       </div>
     </div>
   );
-} 
+}
