@@ -74,8 +74,7 @@ export default function RegistrationForm() {
       <div className="max-w-3xl mx-auto">
         <div className="text-center mb-8">
           <img
-            src="/public/reach_logo.png"
-            alt="R.E.A.C.H Logo"
+            src="/reach_logo.png"
             className="mx-auto h-24 w-24 mb-4"
           />
           <h1 className="text-3xl font-bold text-gray-900">R.E.A.C.H</h1>
