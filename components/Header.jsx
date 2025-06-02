@@ -46,7 +46,7 @@ function Header() {
 
   return (
     <>
-      <nav className="flex justify-between pl-4 pr-4 bg-gray-50 items-center w-full h-[64px]">
+      <nav className="flex justify-between pl-4 pr-4 bg-gray-100 items-center w-full h-[64px]">
         <div className="flex items-center">
           <Image
             className="mx-4 cursor-pointer"
@@ -56,7 +56,7 @@ function Header() {
             height={35}
             priority
           />
-          <p className="text-gray-700 text-lg font-bold tracking-tightest font-sans">R.E.A.C.H</p>
+          <p className="text-gray-700 text-lg font-bold tracking-tightest font-sans">R.E.A.C.H.</p>
         </div>
 
         <div className="flex items-center justify-between gap-4">
