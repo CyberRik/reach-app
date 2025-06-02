@@ -1,6 +1,10 @@
-import { useState } from "react";
-import { X, Phone, MessageCircle, Camera, MapPin, Clock, User, AlertTriangle, Send, Heart, Thermometer, Droplet, Wifi, Mic } from "lucide-react";
+import { useState, useEffect } from "react";
+import { X, Phone, MessageCircle, Camera, MapPin, Clock, User, AlertTriangle, Send, Heart, Thermometer, Droplet, Wifi, Mic, Map } from "lucide-react";
 import { formatDistanceToNow } from "date-fns";
+import dynamic from 'next/dynamic';
+
+// Dynamically import the MapTab component to ensure it only renders on the client side
+const MapTab = dynamic(() => import('./ResponderLoc'), { ssr: false });
 
 const severityColors = {
   critical: 'bg-red-100 text-red-800 border border-red-400 shadow-sm',
@@ -135,14 +139,14 @@ export default function EventModal({ incident, setModal }) {
                 <div>
                   {update.headline && <p className="font-semibold text-sm text-gray-900 mb-1">{update.headline}</p>}
                   <p className="text-sm text-gray-900 pr-4">{update.description}</p>
-                </div>
+          </div>
                 <span className="text-xs text-gray-700 flex-shrink-0">{update.time ? formatDistanceToNow(new Date(update.time), { addSuffix: true }) : 'Unknown'}</span>
-              </div>
+          </div>
             ))}
             {(!incident.updates || incident.updates.length === 0) && (
               <div className="text-sm text-gray-600 italic">No updates available.</div>
-            )}
-          </div>
+          )}
+        </div>
         </div>
       </div>
     </div>
@@ -208,22 +212,22 @@ export default function EventModal({ incident, setModal }) {
       {otherMedia.length > 0 && (
         <div className="grid grid-cols-3 gap-4">
           {otherMedia.map((media) => (
-            <div key={media.id} className="space-y-2">
+          <div key={media.id} className="space-y-2">
               <div className="relative w-full h-32 rounded-lg overflow-hidden shadow-md bg-gray-200">
-                <img 
-                  src={media.url} 
-                  alt={media.caption}
+            <img 
+              src={media.url} 
+              alt={media.caption}
                   className="w-full h-full object-cover"
-                />
+            />
                 {media.type === 'video' && (
                   <div className="absolute inset-0 flex items-center justify-center bg-black bg-opacity-30 hover:bg-opacity-70 transition">
                     <svg className="w-8 h-8 text-white" fill="currentColor" viewBox="0 0 24 24"><path d="M8 5v14l11-7z"></path></svg>
                   </div>
                 )}
               </div>
-            </div>
-          ))}
-        </div>
+          </div>
+        ))}
+      </div>
       )}
     </div>
   );
@@ -261,7 +265,7 @@ export default function EventModal({ incident, setModal }) {
               </div>
             </div>
           ))}
-        </div>
+          </div>
       </div>
 
       <div className="p-4 bg-gray-100 border-t border-gray-300">
@@ -284,6 +288,11 @@ export default function EventModal({ incident, setModal }) {
       </div>
     </div>
   );
+
+  const renderMapTab = () => {
+    // We can now directly render MapTab as it's dynamically imported
+    return <MapTab incident={incident} />;
+  };
 
   return (
     <div 
@@ -318,6 +327,7 @@ export default function EventModal({ incident, setModal }) {
             { id: 'details', label: 'Details', icon: AlertTriangle },
             { id: 'media', label: 'Media', icon: Camera },
             { id: 'chat', label: 'Chat', icon: MessageCircle },
+            { id: 'map', label: 'Map', icon: MapPin },
           ].map((tab) => {
             const Icon = tab.icon;
             return (
@@ -341,6 +351,7 @@ export default function EventModal({ incident, setModal }) {
           {activeTab === 'details' && renderDetailsTab()}
           {activeTab === 'media' && renderMediaTab()}
           {activeTab === 'chat' && renderChatTab()}
+          {activeTab === 'map' && renderMapTab()}
         </div>
 
         <div className="p-4 border-t border-gray-300 bg-gray-100">

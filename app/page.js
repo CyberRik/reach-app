@@ -27,6 +27,8 @@ export default function Home() {
           console.log(`CategoryResults after adding ${cate}:`, newResults);
           return newResults;
         });
+      } else {
+        console.warn('No data received for', cate, res);
       }
     }).catch(error => {
       console.error('Error fetching places for', cate, ':', error);
@@ -61,8 +63,10 @@ export default function Home() {
             }
           }
         }
+        console.log("Flattened alerts array before setting state:", allAlertsArray);
         setalerts(allAlertsArray);
       } else {
+         console.warn('No alerts data received:', res);
         setalerts([]);
       }
     }).catch(error => {
@@ -70,24 +74,31 @@ export default function Home() {
       setalerts([]);
     });
   },[])
+
   return (<>
     <Header />
 
     {/* Absolutely positioned container for the Map to fill the area below the header */}
-    <div style={{ position: 'absolute', top: '64px', left: '0', right: '0', bottom: '0' }}> {/* Explicitly set top and bottom for height */}
-      {/* Category Search positioned relative to the map container */}
-      <div className="absolute top-[8px] left-3 z-120"> {/* Moved CategorySearch inside map container */}
+    <div style={{ position: 'absolute', top: '64px', left: '0', right: '0', bottom: '0' }}>
+      {/* Category Search positioned relative to the map container - always show */}
+      <div className="absolute top-[8px] left-3 z-120">
           <CategorySearch category={category} setcategory={setcategory} />
       </div>
-      {/* Map component fills this container */}
-      <Map results={categoryResults} className="w-full h-full"/> {/* Ensure Map fills its absolute parent */}
+
+      {/* Always render the Google Map */}
+      <Map results={categoryResults} className="w-full h-full"/>
+
     </div>
 
+    {/* Active Events dashboard - always shown */}
     <ActiveEvents alerts={alerts} setModal={setModal} setEvent={setEvent} onIncidentSelect={(incident) => console.log('Incident selected:', incident)} />
-      {modal ? 
+      
+    {/* Event Modal - show only if modal state is true */}
+    {modal ? 
+      // Pass setModal to the modal so it can close itself
       (<EventModal setModal={setModal} incident={event}/>):
       null
-      }
+    }
   </>
   );
 }

@@ -50,9 +50,9 @@ return {
 export async function GET(request){
     const {searchParams}= new URL(request.url)
     const category = searchParams.get("category");
-    const Medicalevent1= formatEventdata({id:45,event_code:"CVX",event_type:"Cardiac Event",category:"Medical",alert_lat:38.625196855855506,alert_lng:-90.115183317234, responder_lat: 38.626, responder_lng: -90.116, address:"1359 North 31st Street, East St. Louis, IL 62204", reportedAt: new Date(Date.now() - 5 * 60 * 1000),responders:["WGN-2021"]})
-    const Fireevent1= formatEventdata({id:47,event_code:"F1V",event_type:"Structure Fire",category:"Fire",alert_lat:38.605196855855506,alert_lng:-90.015183317234, responder_lat: 38.606, responder_lng: -90.016, address:"90 Cedar Drive, Fairview Heights,East St. Louis, IL 62208", reportedAt: new Date(Date.now() - 10 * 60 * 1000), volunteers: { basic: ["#301"]}})
-    const Crimeevent1= formatEventdata({id:40,event_code:"RR",event_type:"Robbery",category:"Crime",alert_lat:38.925196855855506,alert_lng:-90.125183317234, responder_lat: 38.926, responder_lng: -90.126,address:"Harris Lane, Madison County,St.Louis, IL 62002", reportedAt: new Date(Date.now() - 25 * 60 * 1000), volunteers: { Intermediate: ["#55", "#61"]}})
+    const Medicalevent1= formatEventdata({id:45,event_code:"CVX",event_type:"Cardiac Event",category:"Medical",alert_lat:38.625196855855506,alert_lng:-90.115183317234, responder_lat: 38.7, responder_lng: -90.2, address:"1359 North 31st Street, East St. Louis, IL 62204", reportedAt: new Date(Date.now() - 5 * 60 * 1000),responders:["WGN-2021"]})
+    const Fireevent1= formatEventdata({id:47,event_code:"F1V",event_type:"Structure Fire",category:"Fire",alert_lat:38.605196855855506,alert_lng:-90.015183317234, responder_lat: 38.5, responder_lng: -90.3, address:"90 Cedar Drive, Fairview Heights,East St. Louis, IL 62208", reportedAt: new Date(Date.now() - 10 * 60 * 1000), volunteers: { basic: ["#301"]}})
+    const Crimeevent1= formatEventdata({id:40,event_code:"RR",event_type:"Robbery",category:"Crime",alert_lat:38.925196855855506,alert_lng:-90.125183317234, responder_lat: 39.0, responder_lng: -90.4,address:"Harris Lane, Madison County,St.Louis, IL 62002", reportedAt: new Date(Date.now() - 25 * 60 * 1000), volunteers: { Intermediate: ["#55", "#61"]}})
     const MasterOfAlerts={
         "Medical":{
             "product":{"results":[Medicalevent1.results[0]]}},
@@ -62,8 +62,10 @@ export async function GET(request){
             "product":{"results":[Crimeevent1.results[0]]}}
     }
     if(category){
+    console.log("Sending categorized alerts from API:", MasterOfAlerts[category]);
     return NextResponse.json(MasterOfAlerts[category])
     }else{
+        console.log("Sending all alerts from API:", MasterOfAlerts);
         return NextResponse.json(MasterOfAlerts)
     }
 }

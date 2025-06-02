@@ -17,7 +17,12 @@ const getAlerts = () => {
   return axios.get('/api/alerts');
 };
 
+const getIncidentById = (id) => {
+  return axios.get(`/api/incidents/${id}`);
+};
+
 export default {
   getGooglePlaces,
-  getAlerts
+  getAlerts,
+  getIncidentById
 };
