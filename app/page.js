@@ -24,6 +24,7 @@ export default function Home() {
         setcategoryResults((prev) => {
           const newResults = [...prev, [cate, results]];
           console.log('Updated categoryResults:', newResults);
+          console.log(`CategoryResults after adding ${cate}:`, newResults);
           return newResults;
         });
       }
