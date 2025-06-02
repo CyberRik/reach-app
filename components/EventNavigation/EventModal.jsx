@@ -161,7 +161,7 @@ export default function EventModal({ incident, setModal }) {
       <h3 className="font-semibold text-gray-900 mb-4 mt-6">Media</h3>
 
       <div className="grid grid-cols-3 gap-2 text-center text-sm mb-4">
-        {[ 'All', 'Videos', 'Images'].map(filter => (
+        {['All', 'Videos', 'Images'].map(filter => (
           <button
             key={filter}
             className={`flex-1 py-1 rounded-md ${
@@ -215,41 +215,39 @@ export default function EventModal({ incident, setModal }) {
   );
 
   const renderChatTab = () => (
-    <div className="flex flex-col h-[500px] bg-white">
-      <div className="p-4 bg-gray-100 border-b border-gray-300">
-        <h3 className="font-semibold text-gray-900 mb-3">Voice Channels</h3>
+    <div className="flex flex-col h-full">
+      <div className="p-4 bg-gray-50 border-b border-gray-200">
+        <h3 className="font-semibold text-gray-900 mb-4">Voice Channels</h3>
         <div className="space-y-3">
-          {mockVoiceChannels.map((channel, index) => {
-            const Icon = channel.icon;
-            return (
-              <div key={index} className="flex justify-between items-center bg-gray-200 p-3 rounded-md shadow-sm">
-                <div className="flex items-center space-x-2">
-                  <Icon className="w-4 h-4 text-green-600" />
-                  <div>
-                    <div className="font-medium text-sm text-gray-900">{channel.label}</div>
-                    <div className="text-xs text-gray-700">{channel.participants}</div>
-                  </div>
+          {mockVoiceChannels.map((channel, index) => (
+            <div key={index} className="flex items-center justify-between bg-white p-3 rounded-lg shadow-sm">
+              <div className="flex items-center space-x-3">
+                <channel.icon className="w-5 h-5 text-gray-500" />
+                <div>
+                  <div className="font-medium text-gray-900">{channel.label}</div>
+                  <div className="text-sm text-gray-500">{channel.participants}</div>
                 </div>
-                <span className="text-sm font-semibold text-green-700">{channel.count} Connected</span>
               </div>
-            );
-          })}
+              <div className="text-sm text-gray-500">{channel.count} online</div>
+            </div>
+          ))}
         </div>
       </div>
 
-      <div className="flex-1 p-4 space-y-4 overflow-y-auto bg-white">
-        <h3 className="font-semibold text-gray-900 mb-3">Transcript</h3>
-        {mockTranscript.map((message, index) => (
-          <div key={index} className="flex justify-start">
-            <div className="max-w-xs px-3 py-2 rounded-lg bg-blue-100 text-blue-900 shadow-sm">
-              <div className="font-medium text-xs mb-1">{message.sender}</div>
-              <div className="text-sm">{message.text}</div>
-              <div className="text-xs mt-1 text-right text-gray-600">
-                {message.time}
+      <div className="flex-1 overflow-y-auto p-4">
+        <div className="space-y-4">
+          {mockTranscript.map((message, index) => (
+            <div key={index} className="flex flex-col space-y-1">
+              <div className="flex items-center space-x-2">
+                <span className="text-xs text-gray-500">{message.time}</span>
+                <span className="text-sm font-medium text-gray-900">{message.sender}</span>
+              </div>
+              <div className="bg-gray-100 rounded-lg p-3 text-sm text-gray-800">
+                {message.text}
               </div>
             </div>
-          </div>
-        ))}
+          ))}
+        </div>
       </div>
 
       <div className="p-4 bg-gray-100 border-t border-gray-300">
@@ -274,7 +272,14 @@ export default function EventModal({ incident, setModal }) {
   );
 
   return (
-    <div className="fixed inset-0 z-50 flex items-center justify-center bg-black bg-opacity-30">
+    <div 
+      className="fixed inset-0 z-50 flex items-center justify-center bg-black/10"
+      onClick={(e) => {
+        if (e.target === e.currentTarget) {
+          handleClose();
+        }
+      }}
+    >
       <div className="bg-white rounded-lg shadow-xl w-full max-w-2xl max-h-[90vh] flex flex-col">
         <div className="flex items-center justify-between p-4 bg-red-600 text-white border-b border-red-700 shadow">
           <div className="flex items-center space-x-3">
