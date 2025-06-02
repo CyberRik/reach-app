@@ -56,7 +56,7 @@ function Header() {
             height={35}
             priority
           />
-          <p className="text-gray-700 text-lg font-bold tracking-tightest font-sans">R.E.A.C.H</p>
+          <p className="text-gray-700 text-lg font-bold tracking-tightest font-sans">R.E.A.C.H.</p>
         </div>
 
         <div className="flex items-center justify-between gap-4">
