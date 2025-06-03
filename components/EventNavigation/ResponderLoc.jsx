@@ -4,7 +4,7 @@ import io from 'socket.io-client';
 import L from 'leaflet';
 import 'leaflet/dist/leaflet.css';
 
-// Custom Icons using image files
+// Custom Icons using online URLs
 const responderIcon = new L.Icon({
   iconUrl: '/responder.png',
   shadowUrl: 'https://cdnjs.cloudflare.com/ajax/libs/leaflet/1.9.4/images/marker-shadow.png',
@@ -15,7 +15,7 @@ const responderIcon = new L.Icon({
 });
 
 const incidentIcon = new L.Icon({
-  iconUrl: '/eventLoc.png',
+  iconUrl: 'eventLoc.png',
   shadowUrl: 'https://cdnjs.cloudflare.com/ajax/libs/leaflet/1.9.4/images/marker-shadow.png',
   iconSize: [40, 41],
   iconAnchor: [12, 41],
@@ -29,6 +29,10 @@ const ResponderLoc = ({ incident }) => {
   const [remainingPath, setRemainingPath] = useState([]);
   const [error, setError] = useState(null);
   const [initialBounds, setInitialBounds] = useState(null);
+  const [routeInfo, setRouteInfo] = useState(null);
+  const [loading, setLoading] = useState(true);
+  const [etaTime, setEtaTime] = useState('');
+  const [remainingDistance, setRemainingDistance] = useState('');
   const mapRef = useRef();
   const socketRef = useRef(null);
 
@@ -40,50 +44,44 @@ const ResponderLoc = ({ incident }) => {
            !isNaN(location[1]);
   };
 
-  // Function to store position in localStorage
-  const storePosition = (position) => {
-    if (incident?.id && isValidLocation(position)) {
-      localStorage.setItem(`responder_position_${incident.id}`, JSON.stringify(position));
-    }
+  // Calculate distance between two points in kilometers
+  const calculateDistance = (point1, point2) => {
+    const R = 6371; // Earth's radius in km
+    const dLat = (point2[0] - point1[0]) * Math.PI / 180;
+    const dLon = (point2[1] - point1[1]) * Math.PI / 180;
+    const a = 
+      Math.sin(dLat/2) * Math.sin(dLat/2) +
+      Math.cos(point1[0] * Math.PI / 180) * Math.cos(point2[0] * Math.PI / 180) * 
+      Math.sin(dLon/2) * Math.sin(dLon/2);
+    const c = 2 * Math.atan2(Math.sqrt(a), Math.sqrt(1-a));
+    return R * c;
   };
 
-  // Function to get stored position from localStorage
-  const getStoredPosition = () => {
-    if (incident?.id) {
-      const stored = localStorage.getItem(`responder_position_${incident.id}`);
-      if (stored) {
-        try {
-          const position = JSON.parse(stored);
-          if (isValidLocation(position)) {
-            return position;
-          }
-        } catch (e) {
-          console.error('Error parsing stored position:', e);
-        }
-      }
+  // Calculate remaining distance when path or marker position changes
+  useEffect(() => {
+    if (!markerPosition || remainingPath.length < 2) return;
+
+    let totalDistance = 0;
+    for (let i = 0; i < remainingPath.length - 1; i++) {
+      totalDistance += calculateDistance(remainingPath[i], remainingPath[i + 1]);
     }
-    return null;
-  };
+
+    // Format distance
+    if (totalDistance < 1) {
+      setRemainingDistance(`${Math.round(totalDistance * 1000)}m`);
+    } else {
+      setRemainingDistance(`${totalDistance.toFixed(1)}km`);
+    }
+  }, [markerPosition, remainingPath]);
 
   useEffect(() => {
     if (!incident || !incident.responder_location || !incident.geometry?.location) {
       setError('Invalid incident data: Missing responder or incident location');
+      console.error('Invalid incident prop:', incident);
       return;
     }
 
-    // Check if this is a fresh session (i.e., page reload)
-    const isFreshSession = !sessionStorage.getItem('appSessionActive');
-    if (isFreshSession) {
-      sessionStorage.setItem('appSessionActive', 'true');
-      // On page reload, clear the stored position to reset to initial location
-      if (incident?.id) {
-        localStorage.removeItem(`responder_position_${incident.id}`);
-      }
-    }
-
-    // Get initial location: use stored position if available, otherwise use incident's responder location
-    const storedPosition = getStoredPosition();
-    const initialLocation = storedPosition || [
+    const initialLocation = [
       incident.responder_location.lat,
       incident.responder_location.lng,
     ];
@@ -95,19 +93,38 @@ const ResponderLoc = ({ incident }) => {
 
     if (!isValidLocation(initialLocation) || !isValidLocation(incidentLocation)) {
       setError('Invalid initial responder or incident location coordinates');
+      console.error('Invalid coordinates:', { initialLocation, incidentLocation });
       return;
     }
 
     setMarkerPosition(initialLocation);
-    console.log('Initial responder location:', initialLocation);
+    console.log('Initial responder location set to:', initialLocation);
 
     const bounds = L.latLngBounds([initialLocation, incidentLocation]);
     setInitialBounds(bounds);
+    console.log('Initial bounds set to:', bounds);
   }, [incident]);
 
+  // Calculate ETA time when route info is received
   useEffect(() => {
-    if (!incident?.id) return;
+    if (routeInfo?.duration) {
+      const now = new Date();
+      const durationMatch = routeInfo.duration.match(/(\d+)/);
+      if (durationMatch) {
+        const minutes = parseInt(durationMatch[1]);
+        const eta = new Date(now.getTime() + minutes * 60000);
+        setEtaTime(eta.toLocaleTimeString([], { hour: '2-digit', minute: '2-digit' }));
+      }
+    }
+  }, [routeInfo]);
 
+  useEffect(() => {
+    if (!incident?.id) {
+      console.error('No incident ID provided');
+      return;
+    }
+
+    setLoading(true);
     if (socketRef.current) {
       socketRef.current.emit('leaveIncident', incident.id);
       socketRef.current.disconnect();
@@ -128,26 +145,26 @@ const ResponderLoc = ({ incident }) => {
     newSocket.removeAllListeners();
 
     newSocket.on('incidentData', (data) => {
-      console.log('Received incident data:', data);
+      console.log('Received incidentData:', JSON.stringify(data, null, 2));
       if (data.routeInfo && data.routeInfo.path) {
         setPath(data.routeInfo.path);
         setRemainingPath(data.routeInfo.path);
+        setRouteInfo(data.routeInfo);
+        setLoading(false);
+        console.log('Set path with length:', data.routeInfo.path.length);
       } else {
         setError('No route data available');
+        setLoading(false);
+        console.log('No route data in incidentData');
       }
     });
 
     newSocket.on('responderLocationUpdated', (data) => {
-      console.log('Received location update:', data);
-      // Handle both old format (array) and new format (object with position and bearing)
+      console.log('Received responderLocationUpdated:', JSON.stringify(data, null, 2));
       const position = Array.isArray(data) ? data : data.position;
       if (isValidLocation(position)) {
         setMarkerPosition(position);
-        // Store the position in localStorage whenever we receive an update
-        if (incident?.id) {
-          localStorage.setItem(`responder_position_${incident.id}`, JSON.stringify(position));
-          console.log('Stored position in localStorage:', position);
-        }
+        console.log('Updated marker position to:', position);
       } else {
         console.error('Invalid location update received:', data);
       }
@@ -187,11 +204,15 @@ const ResponderLoc = ({ incident }) => {
   useEffect(() => {
     if (path.length > 0 && mapRef.current) {
       mapRef.current.fitBounds(path);
+      console.log('Map fit to path bounds');
     }
   }, [path]);
 
   useEffect(() => {
-    if (!markerPosition || path.length === 0) return;
+    if (!markerPosition || path.length === 0) {
+      console.log('Skipping remainingPath update: markerPosition or path missing');
+      return;
+    }
 
     let closestIndex = 0;
     let minDistance = Infinity;
@@ -209,18 +230,40 @@ const ResponderLoc = ({ incident }) => {
 
     const newRemainingPath = path.slice(closestIndex);
     setRemainingPath(newRemainingPath);
+    console.log('Updated remainingPath, length:', newRemainingPath.length);
   }, [markerPosition, path]);
 
   useEffect(() => {
     if (mapRef.current) {
       setTimeout(() => {
         mapRef.current.invalidateSize();
+        console.log('Map size invalidated');
       }, 100);
     }
   }, []);
 
   return (
     <div className="relative h-[500px] w-full">
+      <div className="nav-bar p-4 bg-gray-100 border-b border-gray-200 flex justify-between items-center">
+        <div className="left">
+          {loading && <span className="font-bold">Calculating Route...</span>}
+          {error && <span className="font-bold text-red-600">Error: {error}</span>}
+          {!loading && !error && routeInfo && (
+            <>
+              <span className="font-bold text-gray-700">{`Towards ${routeInfo.endAddress.split(',')[0]}`}</span>
+              <span className="ml-2 text-gray-600">{remainingDistance}</span>
+            </>
+          )}
+          {!loading && !error && !routeInfo && <span className="font-bold text-gray-600">No route found.</span>}
+        </div>
+        <div className="right">
+          {loading && <span>ETA: Loading...</span>}
+          {error && <span className="text-red-600">ETA: Error</span>}
+          {!loading && !error && routeInfo && (
+            <span className="text-gray-600">{`ETA: ${etaTime}`}</span>
+          )}
+        </div>
+      </div>
       {error ? (
         <div className="absolute inset-0 flex items-center justify-center bg-gray-100 text-red-600">
           {error}
@@ -233,9 +276,10 @@ const ResponderLoc = ({ incident }) => {
         <MapContainer
           bounds={initialBounds}
           boundsOptions={{ padding: [50, 50] }}
-          style={{ height: '100%', width: '100%' }}
+          style={{ height: 'calc(100% - 64px)', width: '100%' }}
           whenCreated={(map) => {
             mapRef.current = map;
+            console.log('Map created');
           }}
         >
           <TileLayer
@@ -267,6 +311,24 @@ const ResponderLoc = ({ incident }) => {
                     <p className="text-sm text-blue-600">
                       Lng: {markerPosition[1].toFixed(4)}
                     </p>
+                    {routeInfo && (
+                      <>
+                        <div className="mt-2 pt-2 border-t border-blue-200">
+                          <p className="text-sm text-blue-600">
+                            Distance: {routeInfo.distance}
+                          </p>
+                          <p className="text-sm text-blue-600">
+                            Duration: {routeInfo.duration}
+                          </p>
+                          <p className="text-sm text-blue-600">
+                            From: {routeInfo.startAddress}
+                          </p>
+                          <p className="text-sm text-blue-600">
+                            To: {routeInfo.endAddress}
+                          </p>
+                        </div>
+                      </>
+                    )}
                   </div>
                 </Popup>
               </Marker>

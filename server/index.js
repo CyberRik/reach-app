@@ -204,9 +204,9 @@ io.on('connection', (socket) => {
 
             let speedFactor = baseSpeed;
             if (turnAngle > 90) {
-              speedFactor *= 0.5;
-            } else if (turnAngle > 45) {
               speedFactor *= 0.75;
+            } else if (turnAngle > 45) {
+              speedFactor *= 0.85;
             }
 
             const segmentPoints = interpolatePoints(start, end, stepsPerSegment);
